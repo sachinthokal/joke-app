@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: sstdevops 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sstdevops
+  template:
+    metadata:
+      labels:
+        app: sstdevops 
+    spec:
+      containers:
+        - name: sstdevops 
+          image: jokeapp.azurecr.io/sstdevops
+          ports:
+          - containerPort: 5000
