@@ -13,23 +13,25 @@ steps:
 - task: Docker@2
   displayName: Build and Push Image
   inputs:
-    containerRegistry: 'acr-service-connection'
+    containerRegistry: 'jokeapp-service connection'
     repository: '$(imageName)'
     command: 'buildAndPush'
     Dockerfile: '**/Dockerfile'
-    tags: |
-      $(tag)
+    tags: '$(tag)'
 
 - task: Kubernetes@1
   displayName: Deploy to AKS
   inputs:
     connectionType: 'Azure Resource Manager'
     azureSubscriptionEndpoint: 'azure-service-connection'
-    azureResourceGroup: 'rg-name'
-    kubernetesCluster: 'aks-name'
+    azureResourceGroup: 'joke-rg'
+    kubernetesCluster: 'joke-app-aks'
+    useClusterAdmin: true
     namespace: 'default'
-    command: apply
+    command: 'apply'
     useConfigurationFile: true
     configuration: |
       k8s/deployment.yaml
       k8s/service.yaml
+    secretType: 'dockerRegistry'
+    containerRegistryType: 'Azure Container Registry'
