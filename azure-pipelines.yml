@@ -43,14 +43,12 @@ stages:
     - task: Kubernetes@1
       displayName: Apply Kubernetes Manifests
       inputs:
-        connectionType: 'Azure Resource Manager'
-        azureSubscriptionEndpoint: 'azure-service-connection'
-        azureResourceGroup: 'joke-rg'
-        kubernetesCluster: 'joke-app-aks'
-        useClusterAdmin: true
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: 'aks-k8s-connection'
         namespace: 'default'
         command: 'apply'
         useConfigurationFile: true
         configuration: |
           k8s/deployment.yaml
           k8s/service.yaml
+
