@@ -3,7 +3,7 @@ trigger:
 
 variables:
   imageName: joke-app
-  acrLoginServer: jokeapp.azurecr.io
+  acrName: jokeapp
   tag: $(Build.BuildId)
 
 pool:
@@ -27,28 +27,26 @@ stages:
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
         tags: |
-          $(tag)          # ✅ PROD TAG ONLY
+          $(tag)
 
 # =============================
 # STAGE 2: DEPLOY TO AKS
 # =============================
 - stage: Deploy
-  displayName: Deploy to AKS (Prod)
+  displayName: Deploy to AKS
   dependsOn: Build
   condition: succeeded()
   jobs:
   - job: DeployJob
     displayName: AKS Deploy Job
     steps:
-
     # 🔁 Inject BuildId into manifest
     - script: |
         sed -i "s|__TAG__|$(tag)|g" manifests/deployment.yaml
         echo "Updated deployment.yaml:"
         cat manifests/deployment.yaml
       displayName: Replace image tag in manifest
-
-    # 🚀 Apply manifests
+      
     - task: Kubernetes@1
       displayName: Apply Kubernetes Manifests
       inputs:
@@ -59,7 +57,3 @@ stages:
         useConfigurationFile: true
         configuration: 'manifests/'
 
-    # ✅ Verify rollout
-    - script: |
-        kubectl rollout status deployment joke-app -n default
-      displayName: Verify Deployment
