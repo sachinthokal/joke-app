@@ -28,6 +28,7 @@ stages:
         Dockerfile: '**/Dockerfile'
         tags: |
           $(tag)
+          latest
 
 # =============================
 # STAGE 2: DEPLOY TO AKS

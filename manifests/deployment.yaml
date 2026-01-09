@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: joke-app
-        image: image_tag
+        image: jokeapp.azurecr.io/joke-app:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
