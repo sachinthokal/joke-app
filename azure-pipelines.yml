@@ -29,9 +29,11 @@ stages:
 
     # 🔹 Setup buildx
     - script: |
-        docker buildx create --use --name aksbuilder || true
+        docker buildx create --name aksbuilder || true
+        docker buildx use aksbuilder
         docker buildx inspect --bootstrap
       displayName: Setup Docker Buildx
+
 
     # 🔹 Build & Push AMD64 image
     - script: |
