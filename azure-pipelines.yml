@@ -27,21 +27,17 @@ stages:
         command: login
         containerRegistry: 'jokeapp-service-connection'
 
-    # 🔹 Setup buildx
+    # 🔹 Build Image (SINGLE manifest)
     - script: |
-        docker buildx create --name aksbuilder || true
-        docker buildx use aksbuilder
-        docker buildx inspect --bootstrap
-      displayName: Setup Docker Buildx
-
-
-    # 🔹 Build & Push AMD64 image
-    - script: |
-        docker buildx build \
+        docker build \
           --platform linux/amd64 \
-          -t $(acrName).azurecr.io/$(imageName):$(tag) \
-          --push .
-      displayName: Build & Push Image (AMD64)
+          -t $(acrName).azurecr.io/$(imageName):$(tag) .
+      displayName: Docker Build (linux/amd64)
+
+    # 🔹 Push Image
+    - script: |
+        docker push $(acrName).azurecr.io/$(imageName):$(tag)
+      displayName: Docker Push
 
 # =============================
 # STAGE 2: DEPLOY TO AKS
