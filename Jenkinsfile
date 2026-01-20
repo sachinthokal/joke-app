@@ -56,6 +56,9 @@ pipeline {
         stage('Validate & Reload Nginx') {
             steps {
                 sh """
+                sudo rm -f /etc/nginx/sites-enabled/default || true
+                sudo rm -f /etc/nginx/sites-available/flaskapp || true
+                sudo ln -s /etc/nginx/sites-available/flaskapp /etc/nginx/sites-enabled/
                 sudo nginx -t
                 sudo systemctl reload nginx
                 """
